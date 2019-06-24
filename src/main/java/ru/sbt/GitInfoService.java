@@ -13,7 +13,12 @@ public class GitInfoService {
         this.pathToRepository = pathToRepository;
     }
 
-    public void getCommitInfo() throws IOException {
+    public Map<String, Double> getClassCommitNumber() throws IOException {
+        getCommitInfo();
+        return readFileToMap();
+    }
+
+    private void getCommitInfo() throws IOException {
         String command = "git log --output gitLog.txt --name-status --pretty=format:\"\"";
 
         Runtime runtime = Runtime.getRuntime();
@@ -29,12 +34,12 @@ public class GitInfoService {
         }
     }
 
-    public void readFileToMap() {
-        Map<String, Integer> map = new HashMap();
+    private Map<String, Double> readFileToMap() {
+        Map<String, Double> map = new HashMap();
         List<String> testList = new ArrayList<>();
         try {
             FileInputStream fstream = new FileInputStream(pathToRepository + "\\gitLog.txt");
-            String pathBeforeDir = pathToRepository.substring(0, pathToRepository.lastIndexOf('\\'));
+            //String pathBeforeDir = pathToRepository.substring(0, pathToRepository.lastIndexOf('\\'));
             BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
             String strLine;
             while ((strLine = br.readLine()) != null) {
@@ -42,20 +47,22 @@ public class GitInfoService {
                     // отделяю вид коммита
                     String[] addresses = strLine.split("\t");
                     String address = pathToRepository + '\\' + addresses[1];
+                    // TODO: везед слеши заменить на бэкслеши
                     testList.add(address);
                     // если ээлемент есть, увеличиваем счетчик
-                    Integer amount = map.get(address);
+                    Double amount = map.get(address);
                     if (amount != null) {
                         map.put(address, amount + 1);
                     } else {
-                        map.put(address, 1);
+                        map.put(address, 1.0);
                     }
                 }
             }
-            System.out.println(map.get("C:\\Users\\Enjeru\\MIPT\\Diplom\\ForAnalysis\\cassandra\\src\\java\\org\\apache\\cassandra\\service\\CacheServiceMBean.java"));
+            System.out.println(map.get("C:\\Users\\Enjeru\\MIPT\\Diplom\\ForAnalysis\\cassandra\\src/java/org/apache/cassandra/audit/AuditEvent.java"));
         } catch (IOException e) {
             System.out.println("Ошибка Чтения/записи файла gitLog.txt\"");
         }
+        return map;
     }
 
 
