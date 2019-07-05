@@ -13,33 +13,35 @@ public class GitInfoService {
         this.pathToRepository = pathToRepository;
     }
 
-    public Map<String, Double> getClassCommitNumber() throws IOException {
+    public Map<String, Double> getClassCommitNumber() {
         getCommitInfo();
         return readFileToMap();
     }
 
-    private void getCommitInfo() throws IOException {
+    private void getCommitInfo() {
         String command = "git log --output gitLog.txt --name-status --pretty=format:\"\"";
 
-        Runtime runtime = Runtime.getRuntime();
-        Process proc = runtime.exec(command, null, new File(pathToRepository));
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            Process proc = runtime.exec(command, null, new File(pathToRepository));
 
-        InputStream is = proc.getInputStream();
-        InputStreamReader isr = new InputStreamReader(is);
-        BufferedReader br = new BufferedReader(isr);
+            InputStream is = proc.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
 
-        String line;
-        while ((line = br.readLine()) != null) {
-            System.out.println(line);
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Ошибка исполнения скрипта\"");
         }
     }
 
     private Map<String, Double> readFileToMap() {
         Map<String, Double> map = new HashMap();
-        List<String> testList = new ArrayList<>();
         try {
             FileInputStream fstream = new FileInputStream(pathToRepository + "\\gitLog.txt");
-            //String pathBeforeDir = pathToRepository.substring(0, pathToRepository.lastIndexOf('\\'));
             BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
             String strLine;
             while ((strLine = br.readLine()) != null) {
@@ -49,7 +51,7 @@ public class GitInfoService {
                     String address = pathToRepository + '\\' + addresses[1];
                     // TODO: везед слеши заменить на бэкслеши
                     address = address.replace('/', '\\');
-                    //testList.add(address);
+
                     // если ээлемент есть, увеличиваем счетчик
                     Double amount = map.get(address);
                     if (amount != null) {

@@ -7,13 +7,12 @@ import java.util.Set;
 
 public class PmdResultProcessing {
 
-
     // связь "название анализируемого элемента - информация о классе"
     // Получить данные из xml
 
 
     // Получить данные о коммитах в гите для существующих классов
-    public void main(String[] args) throws IOException {
+    public void main(String[] args) {
 
         //String repositoryPath = args[0];
 
@@ -31,10 +30,12 @@ public class PmdResultProcessing {
                 classMeta.addRuleInfo(new RulesInfo(null, "GitCommitNumberRule", gitMap.get(className)));
             }
         }
-        System.out.println(classMetaDataSet);
+
+
+        ResultWriteService resultWriteService = new ExcelResultWriterService("C:\\Users\\Enjeru\\MIPT\\Diplom\\ExcelResults\\CassandraResult.xls");
+        resultWriteService.writeResult(classMetaDataSet);
     }
 
-    //Если такой класс есть, записываем для него новое правило
-    //Записать данные
+
 
 }
