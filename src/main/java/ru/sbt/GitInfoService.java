@@ -48,7 +48,8 @@ public class GitInfoService {
                     String[] addresses = strLine.split("\t");
                     String address = pathToRepository + '\\' + addresses[1];
                     // TODO: везед слеши заменить на бэкслеши
-                    testList.add(address);
+                    address = address.replace('/', '\\');
+                    //testList.add(address);
                     // если ээлемент есть, увеличиваем счетчик
                     Double amount = map.get(address);
                     if (amount != null) {
@@ -58,7 +59,7 @@ public class GitInfoService {
                     }
                 }
             }
-            System.out.println(map.get("C:\\Users\\Enjeru\\MIPT\\Diplom\\ForAnalysis\\cassandra\\src/java/org/apache/cassandra/audit/AuditEvent.java"));
+            System.out.println(map.get("C:\\Users\\Enjeru\\MIPT\\Diplom\\ForAnalysis\\cassandra\\src\\java\\org\\apache\\cassandra\\service\\StorageProxy.java"));
         } catch (IOException e) {
             System.out.println("Ошибка Чтения/записи файла gitLog.txt\"");
         }

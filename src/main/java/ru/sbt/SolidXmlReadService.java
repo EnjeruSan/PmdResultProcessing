@@ -4,6 +4,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import ru.sbt.ClassMetaData;
+import ru.sbt.RulesInfo;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,10 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class SolidXmlReader {
+public class SolidXmlReadService {
     public Set<ClassMetaData> readXmlFile(String pathname) {
-        Set<ClassMetaData> metaDataSet = new HashSet<ClassMetaData>();
-        ValueFactory valueFactory = new ValueFactoryImpl();
+        Set<ClassMetaData> metaDataSet = new HashSet<>();
         try {
             // Подготовка документа
             File fXmlFile = new File(pathname);
@@ -44,14 +45,22 @@ public class SolidXmlReader {
                     Element vElement = (Element) vNode;
                     // Вытаскиваем данные о нарушении: название правила, имя элемента и строки
                     String ruleName = vElement.getAttribute("rule");
+                    Double value;
 
-                    Double value = valueFactory.getValue(ruleName, vElement);
+                    // Вместо использования Factory
+                    String argument = vElement.getFirstChild().toString().split("\\n")[1];
+                    if(argument.equals("{0}")) {
+                        value = null;
+                    } else {
+                        value = Double.parseDouble(argument);
+                    }
+                    //
                     if (value != null) {
                         String methodName = vElement.getAttribute("method");
                         if (methodName.length() == 0) {
                             methodName = null;
                         }
-                        System.out.println(fileName + "\\" + methodName + ": \nName: " + ruleName + ", value: " + value + " \n");
+                        //System.out.println(fileName + "\\" + methodName + ": \nName: " + ruleName + ", value: " + value + " \n");
                         RulesInfo rulesInfo = new RulesInfo(methodName, ruleName, value);
                         classMetaData.addRuleInfo(rulesInfo);
                     }

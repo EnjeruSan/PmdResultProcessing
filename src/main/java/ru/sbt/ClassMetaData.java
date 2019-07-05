@@ -7,6 +7,7 @@ public class ClassMetaData {
     private String className;
     private Set<RulesInfo> rulesInfoSet = new HashSet<RulesInfo>();
 
+
     public String getClassName() {
         return className;
     }
@@ -26,4 +27,6 @@ public class ClassMetaData {
     public void addRuleInfo(RulesInfo rulesInfo) {
         this.rulesInfoSet.add(rulesInfo);
     }
+
+
 }
